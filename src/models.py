@@ -83,19 +83,19 @@ def knockin_reactions(model, ki_reactions, lower_bound=0, upper_bound=1000):
             rid = rid[3:]
             add_metabolite_exchange(model, rid, lower_bound, upper_bound)
         elif rid == 'PRK':
-            add_metabolite(model, 'rubp_D_c', 'C5H12O11P2', 'Ribulose 1,5-bisphosphate')
+            add_metabolite(model, 'rubp_D_c', 'C5H12O11P2', 'D-ribulose 1,5-bisphosphate')
             sprs = {'ru5p_D_c' : -1, 'atp_c' : -1, 'rubp_D_c' : 1, 'adp_c' : 1}
             add_reaction(model, rid, 'phosphoribulokinase', sprs, lower_bound, upper_bound)
         elif rid == 'RBC':
-            add_metabolite(model, 'rubp_D_c', 'C5H12O11P2', 'Ribulose 1,5-bisphosphate')
+            add_metabolite(model, 'rubp_D_c', 'C5H12O11P2', 'D-ribulose 1,5-bisphosphate')
             sprs = {'rubp_D_c' : -1, 'h2o_c' : -1, 'co2_c' : -1, '3pg_c' : 2, 'h_c' : 3}
             add_reaction(model, rid, 'RuBisCO', sprs, lower_bound, upper_bound)
         elif rid == 'EDD':
-            add_metabolite(model, '2ddg6p_c', 'C6H8O9P', '2-Dehydro-3-deoxy-D-gluconate 6-phosphate')
+            add_metabolite(model, '2ddg6p_c', 'C6H8O9P', '2-dehydro-3-deoxy-D-gluconate 6-phosphate')
             sprs = {'6pgc_c' : -1, 'h2o_c' : 1, '2ddg6p_c' : 1}
             add_reaction(model, rid, '6-phosphogluconate dehydratase', sprs, lower_bound, upper_bound)
         elif rid == 'EDA':
-            add_metabolite(model, '2ddg6p_c', 'C6H8O9P', '2-Dehydro-3-deoxy-D-gluconate 6-phosphate')
+            add_metabolite(model, '2ddg6p_c', 'C6H8O9P', '2-dehydro-3-deoxy-D-gluconate 6-phosphate')
             sprs = {'2ddg6p_c' : -1, 'g3p_c' : 1, 'pyr_c' : 1}
             add_reaction(model, rid, '2-dehydro-3-deoxy-phosphogluconate aldolase', sprs, lower_bound, upper_bound)
         elif rid == 'PKT':
@@ -115,6 +115,14 @@ def knockin_reactions(model, ki_reactions, lower_bound=0, upper_bound=1000):
             add_metabolite(model, 'malcoa_c', 'C25H40N7O20P3S', 'Malyl-CoA')
             sprs = {'malcoa_c':-1, 'accoa_c':1, 'glx_c':1}
             add_reaction(model, rid, 'malyl-CoA lyase', sprs, lower_bound, upper_bound)
+        elif rid == 'SBP':
+            add_metabolite(model, 'sbp_c', 'C7H16O13P2', 'D-sedoheptulose 1,7-bisphosphate')
+            sprs = {'sbp_c':-1, 'h2o_c':-1, 's7p_c':1, 'pi_c':1}
+            add_reaction(model, rid, 'sedoheptulose bisphosphate phosphatase', sprs, lower_bound, upper_bound)
+        elif rid == 'SBA':
+            add_metabolite(model, 'sbp_c', 'C7H16O13P2', 'D-sedoheptulose 1,7-bisphosphate')
+            sprs = {'sbp_c':-1, 'g3p_c':1, 'e4p_c':1}
+            add_reaction(model, rid, 'sedoheptulose bisphosphate aldolase', sprs, lower_bound, upper_bound)
         else:
             raise Exception('unknown knockin reaction: ' + rid)
             
