@@ -1,0 +1,261 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<sbml xmlns="http://www.sbml.org/sbml/level2" level="2" version="1">
+  <model id="Demo_TOY">
+    <notes>
+      <html xmlns="http://www.w3.org/1999/xhtml"><p>COBRA_Toolbox</p></html>
+    </notes>
+    <listOfUnitDefinitions>
+      <unitDefinition id="mmol_per_gDW_per_hr">
+        <listOfUnits>
+          <unit kind="mole" scale="-3" multiplier="1" offset="0"/>
+          <unit kind="gram" exponent="-1" multiplier="1" offset="0"/>
+          <unit kind="second" exponent="-1" multiplier="0.00027777" offset="0"/>
+        </listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
+    <listOfCompartments>
+      <compartment id="cell" name="cell"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="M_cakg" name="c_akg" compartment="cell" />
+      <species id="M_cglu_ext" name="c_glu.ext" compartment="cell" />
+      <species id="M_cact_ext" name="c_act.ext" compartment="cell" />
+      <species id="M_caccoa" name="c_accoa" compartment="cell" />
+      <species id="M_cbiomass_ext" name="c_biomass.ext" compartment="cell" />
+      <species id="M_csuc" name="c_suc" compartment="cell" />
+      <species id="M_coaa" name="c_oaa" compartment="cell" />
+      <species id="M_cr5p" name="c_r5p" compartment="cell" />
+      <species id="M_cpyr" name="c_pyr" compartment="cell" />
+      <species id="M_cg6p" name="c_g6p" compartment="cell" />
+      <species id="M_cicit" name="c_icit" compartment="cell" />
+      <species id="M_cglu" name="c_glu" compartment="cell" />
+    </listOfSpecies>
+    <listOfReactions>
+      <reaction id="j8" name="icit -> akg" reversible="false" fast="false" compartment="cell">
+        <listOfReactants>
+          <speciesReference species="M_cicit" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_cakg" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="1000" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="0"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="j9" name="akg -> suc" reversible="false" fast="false" compartment="cell">
+        <listOfReactants>
+          <speciesReference species="M_cakg" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_csuc" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="1000" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="0"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="Outflow2" name="accoa -> " reversible="true" fast="false" compartment="cell">
+        <annotation>
+          <microbesflux:user-reaction xmlns:microbesflux="http://tanglab.engineering.wustl.edu/dtd.xml">Outflow</microbesflux:user-reaction>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="M_caccoa" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="1000" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="0"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="j4" name="r5p -> pyr" reversible="false" fast="false" compartment="cell">
+        <listOfReactants>
+          <speciesReference species="M_cr5p" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_cpyr" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="1000" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="0"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="j5" name="pyr -> accoa" reversible="false" fast="false" compartment="cell">
+        <listOfReactants>
+          <speciesReference species="M_cpyr" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_caccoa" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="1000" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="0"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="j7" name="accoa + oaa -> icit" reversible="false" fast="false" compartment="cell">
+        <listOfReactants>
+          <speciesReference species="M_caccoa" stoichiometry="1"/>
+          <speciesReference species="M_coaa" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_cicit" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="1000" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="0"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="j2" name="g6p -> r5p" reversible="false" fast="false" compartment="cell">
+        <listOfReactants>
+          <speciesReference species="M_cg6p" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_cr5p" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="1000" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="0"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="j3" name="g6p -> 2 pyr" reversible="false" fast="false" compartment="cell">
+        <listOfReactants>
+          <speciesReference species="M_cg6p" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_cpyr" stoichiometry="2"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="1000" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="0"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="BIOMASS0" name="BIOMASS0" reversible="false" fast="false" compartment="cell">
+        <listOfReactants>
+          <speciesReference species="M_cakg" stoichiometry="1.078"/>
+          <speciesReference species="M_coaa" stoichiometry="1.786"/>
+          <speciesReference species="M_caccoa" stoichiometry="2.928"/>
+          <speciesReference species="M_cpyr" stoichiometry="2.833"/>
+          <speciesReference species="M_cg6p" stoichiometry="0.205"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="1000" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="1"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="Inflow1" name="-> g6p" reversible="true" fast="false" compartment="cell">
+        <annotation>
+          <microbesflux:user-reaction xmlns:microbesflux="http://tanglab.engineering.wustl.edu/dtd.xml">Inflow</microbesflux:user-reaction>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="M_cg6p" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="-10" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="-1" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="0"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="j10" name="suc -> oaa" reversible="false" fast="false" compartment="cell">
+        <listOfReactants>
+          <speciesReference species="M_csuc" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_coaa" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="1000" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="0"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="j11" name="pyr -> oaa" reversible="false" fast="false" compartment="cell">
+        <listOfReactants>
+          <speciesReference species="M_cpyr" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_coaa" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="1000" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="0"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="j12" name="2 icit -> agk + glu" reversible="false" fast="false" compartment="cell">
+        <listOfReactants>
+          <speciesReference species="M_cicit" stoichiometry="2"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_cakg" stoichiometry="1"/>
+          <speciesReference species="M_cglu" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="1000" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="0"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="Outflow3" name="glu -> " reversible="false" compartment="cell">
+        <annotation>
+          <microbesflux:user-reaction xmlns:microbesflux="http://tanglab.engineering.wustl.edu/dtd.xml">Outflow</microbesflux:user-reaction>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="M_cglu" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="1000" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="0"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>

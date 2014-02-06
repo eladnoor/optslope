@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<sbml xmlns="http://www.sbml.org/sbml/level2" level="2" version="1">
+  <model id="Demo_TOY">
+    <notes>
+      <html xmlns="http://www.w3.org/1999/xhtml"><p>COBRA_Toolbox</p></html>
+    </notes>
+    <listOfUnitDefinitions>
+      <unitDefinition id="mmol_per_gDW_per_hr">
+        <listOfUnits>
+          <unit kind="mole" scale="-3" multiplier="1" offset="0"/>
+          <unit kind="gram" exponent="-1" multiplier="1" offset="0"/>
+          <unit kind="second" exponent="-1" multiplier="0.00027777" offset="0"/>
+        </listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
+    <listOfCompartments>
+      <compartment id="cell" name="cell"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="M_m1" name="c_source" compartment="cell" />
+      <species id="M_m2" name="c_biomass" compartment="cell" />
+      <species id="M_m3" name="c_intermediate" compartment="cell" />
+      <species id="M_m4" name="c_chemical" compartment="cell" />
+      <species id="M_m5" name="c_byproduct" compartment="cell" />
+    </listOfSpecies>
+    <listOfReactions>
+      <reaction id="r1" name="-> m1" reversible="false" fast="false" compartment="cell">
+        <listOfReactants>
+          <speciesReference stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_m1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="10" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="0"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="r2" name="m1 -> m2" reversible="false" fast="false" compartment="cell">
+        <listOfReactants>
+          <speciesReference species="M_m1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_m2" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="1000" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="0"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="r3" name="m1 -> m3" reversible="false" fast="false" compartment="cell">
+        <listOfReactants>
+          <speciesReference species="M_m1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_m3" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="1000" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="0"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="r4" name="m3 -> m2 + m4" reversible="false" fast="false" compartment="cell">
+        <listOfReactants>
+          <speciesReference species="M_m3" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_m2" stoichiometry="0.5"/>
+          <speciesReference species="M_m4" stoichiometry="0.5"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="1000" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="0"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="r5" name="m4 -> " reversible="false" fast="false" compartment="cell">
+        <listOfReactants>
+          <speciesReference species="M_m4" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="1000" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="0"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="r6" name="m4 -> m5" reversible="false" fast="false" compartment="cell">
+        <listOfReactants>
+          <speciesReference species="M_m4" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_m5" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="1000" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="0"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="r7" name="m5 -> " reversible="false" fast="false" compartment="cell">
+        <listOfReactants>
+          <speciesReference species="M_m5" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="1000" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="0"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="r8" name="m2 -> " reversible="false" fast="false" compartment="cell">
+        <listOfReactants>
+          <speciesReference species="M_m2" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <listOfParameters>
+            <parameter id="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter id="UPPER_BOUND" value="1000" units="mmol_per_gDW_per_hr"/>
+            <parameter id="OBJECTIVE_COEFFICIENT" value="1"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>
