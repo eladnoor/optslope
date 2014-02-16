@@ -106,7 +106,7 @@ def display_reaction(r, m_bold=None, direction=1):
     """
     s_left = []
     s_right = []
-    for m in r.get_reactants() + r.get_products():
+    for m in r.reactants + r.products:
         if m == m_bold:
             s_met = "<a href='#%s'><b>%s</b></a>" % (m.id, m.id)
         else:
@@ -192,7 +192,7 @@ def plot_multi_PPP(model_dict, reaction_id, ax):
         if reaction_id not in model.reactions:
             print 'model "%s" does not contain the reaction "%s"' % (label, reaction_id)
             continue
-        PPP_data = OptKnock(model).get_PPP_data(reaction_id, num_steps=20)
+        PPP_data = OptKnock(model).get_PPP_data(reaction_id)
 
         # verify that this model is feasible (i.e. biomass yield is more than minimal threshold):
         if PPP_data is None:
