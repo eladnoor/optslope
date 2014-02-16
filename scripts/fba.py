@@ -1,23 +1,17 @@
 #!/usr/bin/python
 
-import scipy.sparse
-from itertools import chain
-import os, sys, pickle
 from copy import deepcopy
 import matplotlib.pyplot as plt
 
-from src.analysis_toolbox import model_summary, plot_multi_PPP
+from src.analysis_toolbox import plot_multi_PPP
 from src.models import init_wt_model, knockout_reactions, knockin_reactions
 from src.optknock import OptKnock
-from src.draw_flux import DrawFlux
 from src.html_writer import HtmlWriter
 
 def main():
     main_html = HtmlWriter('res/fba.html')
     main_html.write('<h1>Flux Balance Analysis</h1>\n')
     
-    carbon_sources = {}
-    BM_lower_bound = 0.01
     ko_reactions = ''
     ki_reactions = ''
     PPP_reaction = ''
@@ -27,29 +21,29 @@ def main():
     #########################################
     # Core model for testing glycolysis KOs #
     #########################################
-    #model = init_wt_model('core', {'ac' : -10}); ko_reactions = 'PGM'; ki_reactions = 'RED';
-    #model = init_wt_model('core', {'glc' : -10}); ko_reactions = 'PFK'; ki_reactions = 'RED';
+    #model = init_wt_model('ecoli_core', {'ac' : -10}); ko_reactions = 'PGM'; ki_reactions = 'RED';
+    #model = init_wt_model('ecoli_core', {'glc' : -10}); ko_reactions = 'PFK'; ki_reactions = 'RED';
 
     #######################################
     # Full model Rubisco optimization KOs #
     #######################################
-    #model = init_wt_model('full', {'ac' : -10}); ko_reactions = 'PGM,TRSARr,HPYRRx,HPYRRy'; ki_reactions = 'RED';
-    #model = init_wt_model('full', {'rib_D' : -10}); ko_reactions = 'TKT1'; ki_reactions = 'RBC,PRK'; PPP_reaction = 'RBC';
-    model = init_wt_model('full', {'xyl_D' : -10}); ko_reactions = 'RPI'; ki_reactions = 'RBC,PRK'; PPP_reaction = 'RBC';
-    #model = init_wt_model('full', {'xyl_D' : -10}); ko_reactions = 'G6PDH2r,PFK,F6PA,FRUK,PFK_3,DRPA'; ki_reactions = 'RBC,PRK';
-    #model = init_wt_model('full', {'fru' : -10, 'rib_D' : -10}); ko_reactions = 'G6PDH2r,PFK,F6PA,FRUK,PFK_3,DRPA,TKT1,TKT2'; ki_reactions = 'PKT';
+    #model = init_wt_model('iJO1366', {'ac' : -10}); ko_reactions = 'PGM,TRSARr,HPYRRx,HPYRRy'; ki_reactions = 'RED';
+    #model = init_wt_model('iJO1366', {'rib_D' : -10}); ko_reactions = 'TKT1'; ki_reactions = 'RBC,PRK'; PPP_reaction = 'RBC';
+    model = init_wt_model('iJO1366', {'xyl_D' : -10}); ko_reactions = 'RPI'; ki_reactions = 'RBC,PRK'; PPP_reaction = 'RBC';
+    #model = init_wt_model('iJO1366', {'xyl_D' : -10}); ko_reactions = 'G6PDH2r,PFK,F6PA,FRUK,PFK_3,DRPA'; ki_reactions = 'RBC,PRK';
+    #model = init_wt_model('iJO1366', {'fru' : -10, 'rib_D' : -10}); ko_reactions = 'G6PDH2r,PFK,F6PA,FRUK,PFK_3,DRPA,TKT1,TKT2'; ki_reactions = 'PKT';
     
     ###############################
     # Shikimate generating strain #
     ###############################
-    #model = init_wt_model('full', {'fru' : -10});
+    #model = init_wt_model('iJO1366', {'fru' : -10});
     #ko_reactions = 'G6PDH2r,TALA'; ki_reactions = 'EX_3dhsk_c'; PPP_reaction = 'EX_3dhsk_c';
     #ko_reactions = 'G6PDH2r,PFK,F6PA,FRUK,PFK_3,DRPA'; ki_reactions = 'PKT'; PPP_reaction = 'PKT';
 
     ##########################################################
     # Testing no growth when electrons are provided directly #
     ##########################################################
-    #model = init_wt_model('full', {}); ki_reactions = 'RED';
+    #model = init_wt_model('iJO1366', {}); ki_reactions = 'RED';
     #ko_reactions = "POR5,MCITL2";
     #ko_reactions = "POR5,FTHFLi,GART,RPI"; 
     

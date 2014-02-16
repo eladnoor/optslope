@@ -288,7 +288,7 @@ class OptKnock(object):
         self.create_prob(sense=LpMaximize)
         self.add_primal_variables_and_constraints()
         self.prob.setObjective(self.var_v[self.r_biomass])
-        solution = self.solve()
+        self.solve()
         max_biomass = self.get_objective_value()
         return max_biomass
 
@@ -299,7 +299,7 @@ class OptKnock(object):
         self.create_prob(sense=LpMaximize)
         self.add_primal_variables_and_constraints()
         self.prob.setObjective(self.var_v[self.r_biomass])
-        solution = self.solve()
+        self.solve()
         max_biomass = self.get_objective_value()
         if max_biomass is None:
             raise Exception("Cannot run FVA because the model is infeasible")
@@ -308,11 +308,11 @@ class OptKnock(object):
         r_target = self.get_reaction_by_id(reaction_id)
         self.prob.setObjective(self.var_v[r_target])
         self.prob.sense = LpMaximize
-        solution = self.solve()
+        self.solve()
         max_v_target = self.get_objective_value()
 
         self.prob.sense = LpMinimize
-        solution = self.solve()
+        self.solve()
         min_v_target = self.get_objective_value()
         
         return min_v_target, max_v_target
@@ -329,7 +329,7 @@ class OptKnock(object):
         if r_target is None:
             return None
 
-        solution = self.solve()
+        self.solve()
 
         if bm_range is None:
             max_biomass = self.get_objective_value()
@@ -341,14 +341,15 @@ class OptKnock(object):
 
         data = []
         for bm_lb in bm_range:
-            self.var_v[self.r_biomass].lowBound = bm_lb
+            self.var_v[self.r_biomass].lowBound = bm_lb - 1e-3
+            self.var_v[self.r_biomass].upBound = bm_lb + 1e-3
 
             self.prob.sense = LpMaximize
-            solution = self.solve()
+            self.solve()
             max_v_target = self.get_objective_value()
 
             self.prob.sense = LpMinimize
-            solution = self.solve()
+            self.solve()
             min_v_target = self.get_objective_value()
             
             data.append((bm_lb, min_v_target, max_v_target))

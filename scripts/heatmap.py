@@ -1,14 +1,10 @@
 #!/usr/bin/python
-import matplotlib.pyplot as plt
-import logging
 import numpy as np
-from itertools import combinations, product
+import sys
+from itertools import product
 from scipy.io import savemat
-
 from src.optknock import OptKnock
-from src.models import *
-from src.analysis_toolbox import *
-from src.html_writer import HtmlWriter
+from src import models
 
 def main():
     #analyze('wild_type', None, None)
@@ -19,8 +15,13 @@ def main():
     #analyze('MOG', 'MCS', 'MCS,MCL')
 
 def analyze(title, target_reaction, knockins, dimension=3):
+    """
+        title           - will be used in the output filename
+        target_reaction - the reaction whose slope will be the color value in the heatmap
+        knockins        - new reactions to add to the model after it is loaded
+        dimension       - the 
+    """
     carbon_uptake_rate = 50 # mmol C / (gDW*h)
-    max_number_of_knockouts = 2
 
     # the following gene pairs are combined into one "knockout" since they have no intermediate flux options:
     # G6PDH2r,PGL,GND - PP-oxidative shunt
@@ -55,13 +56,13 @@ def analyze(title, target_reaction, knockins, dimension=3):
                       '6pgc', 'pyr',    'ac',
                       'electrons']
     
-    core_model = init_wt_model('core', {}, BM_lower_bound=0.1)
+    core_model = models.init_wt_model('ecoli_core', {}, BM_lower_bound=0.1)
     #knockin_reactions(core_model, 'EDD,EDA', 0, 1000)
-    knockin_reactions(core_model, 'EX_g6p,EX_f6p,EX_xu5p_D,EX_r5p,EX_dhap,EX_2pg,EX_e4p,EX_6pgc', 0, 0)
+    models.knockin_reactions(core_model, 'EX_g6p,EX_f6p,EX_xu5p_D,EX_r5p,EX_dhap,EX_2pg,EX_e4p,EX_6pgc', 0, 0)
 
-    wt_model = clone_model(core_model)
+    wt_model = models.clone_model(core_model)
     if knockins is not None:
-        knockin_reactions(wt_model, knockins, 0, 1000)
+        models.knockin_reactions(wt_model, knockins, 0, 1000)
     
     sys.stdout.write("There are %d single knockouts\n" % len(single_ko_list))
     sys.stdout.write("There are %d carbon sources: %s\n" % (len(carbon_sources), ', '.join(carbon_sources)))
@@ -70,15 +71,14 @@ def analyze(title, target_reaction, knockins, dimension=3):
     yield_data = np.zeros((n_ko**dimension, len(carbon_sources)))
     slope_data = np.zeros((n_ko**dimension, len(carbon_sources)))
     
-    indices = range(n_ko)
     for i, ko_list in enumerate(product(*([single_ko_list]*dimension))):
         sys.stdout.write('KO: ' + ', '.join(ko_list) + '; carbon source: ')
         for j, carbon_source in enumerate(carbon_sources):
             sys.stdout.write(carbon_source + ', ')
-            temp_model = clone_model(wt_model)
+            temp_model = models.clone_model(wt_model)
 
             if carbon_source == 'electrons':
-                knockin_reactions(temp_model, 'RED', 0, carbon_uptake_rate*2)
+                models.knockin_reactions(temp_model, 'RED', 0, carbon_uptake_rate*2)
             else:
                 # find out how many carbon atoms are in the carbon source
                 # and normalize the uptake rate to be in units of mmol carbon-source / (gDW*h) 
@@ -89,10 +89,10 @@ def analyze(title, target_reaction, knockins, dimension=3):
                 uptake_rate = carbon_uptake_rate / float(nC)
     
                 for cs in carbon_source.split(','):
-                    set_exchange_bounds(temp_model, cs, lower_bound=-uptake_rate)
+                    models.set_exchange_bounds(temp_model, cs, lower_bound=-uptake_rate)
 
             for ko in set(ko_list): # need to be careful not to KO the same gene twice
-                knockout_reactions(temp_model, ko)
+                models.knockout_reactions(temp_model, ko)
 
             yield_data[i,j] = OptKnock(temp_model).solve_FBA() or np.nan
             

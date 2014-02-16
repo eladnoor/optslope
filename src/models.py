@@ -1,6 +1,3 @@
-import scipy.sparse
-from itertools import chain
-import os, sys, pickle, re
 from copy import deepcopy
 
 from cobra.io.sbml import create_cobra_model_from_sbml_file
@@ -8,7 +5,7 @@ from cobra.core import Reaction, Metabolite, Formula
 
 def init_wt_model(model_name, carbon_sources, BM_lower_bound=0.1):
     
-    if model_name == 'core':
+    if model_name == 'ecoli_core':
         model = create_cobra_model_from_sbml_file('data/ecoli_core.xml', old_sbml=True)
 
         # the core model has these annoying '_b' metabolites that are used as
@@ -24,13 +21,13 @@ def init_wt_model(model_name, carbon_sources, BM_lower_bound=0.1):
         rxns = dict([(r.id, r) for r in model.reactions])
         rxns['ATPM'].lower_bound = 0 # remove the ATP maintenance requirement
         rxns['EX_glc_e'].lower_bound = 0 # remove the default carbon source
-    elif model_name == 'full':
+    elif model_name == 'iJO1366':
         model = create_cobra_model_from_sbml_file('data/iJO1366.xml', old_sbml=True)
         rxns = dict([(r.id, r) for r in model.reactions])
         rxns['ATPM'].lower_bound = 0 # remove the ATP maintenance requirement
         rxns['EX_glc_e'].lower_bound = 0 # remove the default carbon source
-    elif model_name == 'toy':
-        model = create_cobra_model_from_sbml_file('data/toymodel.xml')
+    else:
+        model = create_cobra_model_from_sbml_file('data/%s.xml' % model_name)
         
     for key, val in carbon_sources.iteritems():
         rxns['EX_' + key + '_e'].lower_bound = val
