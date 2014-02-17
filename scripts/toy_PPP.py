@@ -49,7 +49,6 @@ def draw_PPP():
         ax[i,1].set_title('knockout of V1 and V3')
         ax[i,1].set_xlabel('Biomass flux')
 
-    fig.savefig('res/toy2.svg')
-        
+    fig.savefig('res/toy2.svg')     
 if __name__ == "__main__":
     draw_PPP()
