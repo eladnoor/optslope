@@ -7,11 +7,10 @@ from src.optknock import OptKnock
 from src import models
 
 def main():
-    #analyze('wild_type', None, None)
-    analyze('rubisco', 'RBC', 'RBC,PRK', dimension=2)
-    analyze('SBPase', 'SBP', 'SBP,SBA', dimension=2)
+    #analyze('wild_type', None, None, dimension=2)
+    #analyze('rubisco', 'RBC', 'RBC,PRK', dimension=2)
+    #analyze('SBPase', 'SBP', 'SBP,SBA', dimension=2)
     analyze('SBPase_with_rbc', 'SBP', 'SBP,SBA,RBC,PRK', dimension=2)
-    #analyze('deoxyribose', 'DXS', 'DXS')
     #analyze('MOG', 'MCS', 'MCS,MCL')
 
 def analyze(title, target_reaction, knockins, dimension=3):
@@ -57,12 +56,11 @@ def analyze(title, target_reaction, knockins, dimension=3):
                       'electrons']
     
     core_model = models.init_wt_model('ecoli_core', {}, BM_lower_bound=0.1)
-    #knockin_reactions(core_model, 'EDD,EDA', 0, 1000)
     models.knockin_reactions(core_model, 'EX_g6p,EX_f6p,EX_xu5p_D,EX_r5p,EX_dhap,EX_2pg,EX_e4p,EX_6pgc', 0, 0)
 
     wt_model = models.clone_model(core_model)
     if knockins is not None:
-        models.knockin_reactions(wt_model, knockins, 0, 1000)
+        models.knockin_reactions(wt_model, knockins)
     
     sys.stdout.write("There are %d single knockouts\n" % len(single_ko_list))
     sys.stdout.write("There are %d carbon sources: %s\n" % (len(carbon_sources), ', '.join(carbon_sources)))

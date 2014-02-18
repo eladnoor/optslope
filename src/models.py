@@ -74,54 +74,68 @@ def add_reaction(model, id, name, sparse,
     model.add_reactions([reaction])
     return reaction
         
-def knockin_reactions(model, ki_reactions, lower_bound=0, upper_bound=1000):
+def knockin_reactions(model, ki_reactions, lower_bound=None, upper_bound=1000):
     for rid in ki_reactions.split(','):
         if rid.startswith('EX_'):
             rid = rid[3:]
-            add_metabolite_exchange(model, rid, lower_bound, upper_bound)
-        elif rid == 'PRK':
+            if lower_bound is None:
+                add_metabolite_exchange(model, rid, 0, upper_bound)
+            else:
+                add_metabolite_exchange(model, rid, lower_bound, upper_bound)
+            continue
+        
+        reversible = False
+        
+        if rid == 'PRK':
             add_metabolite(model, 'rubp_D_c', 'C5H12O11P2', 'D-ribulose 1,5-bisphosphate')
             sprs = {'ru5p_D_c' : -1, 'atp_c' : -1, 'rubp_D_c' : 1, 'adp_c' : 1}
-            add_reaction(model, rid, 'phosphoribulokinase', sprs, lower_bound, upper_bound)
+            name = 'phosphoribulokinase'
         elif rid == 'RBC':
             add_metabolite(model, 'rubp_D_c', 'C5H12O11P2', 'D-ribulose 1,5-bisphosphate')
             sprs = {'rubp_D_c' : -1, 'h2o_c' : -1, 'co2_c' : -1, '3pg_c' : 2, 'h_c' : 3}
-            add_reaction(model, rid, 'RuBisCO', sprs, lower_bound, upper_bound)
+            name = 'RuBisCO'
         elif rid == 'EDD':
             add_metabolite(model, '2ddg6p_c', 'C6H8O9P', '2-dehydro-3-deoxy-D-gluconate 6-phosphate')
             sprs = {'6pgc_c' : -1, 'h2o_c' : 1, '2ddg6p_c' : 1}
-            add_reaction(model, rid, '6-phosphogluconate dehydratase', sprs, lower_bound, upper_bound)
+            name = '6-phosphogluconate dehydratase'
         elif rid == 'EDA':
             add_metabolite(model, '2ddg6p_c', 'C6H8O9P', '2-dehydro-3-deoxy-D-gluconate 6-phosphate')
             sprs = {'2ddg6p_c' : -1, 'g3p_c' : 1, 'pyr_c' : 1}
-            add_reaction(model, rid, '2-dehydro-3-deoxy-phosphogluconate aldolase', sprs, lower_bound, upper_bound)
+            name = '2-dehydro-3-deoxy-phosphogluconate aldolase'
         elif rid == 'PKT':
             sprs = {'f6p_c' : -1, 'pi_c' : -1, 'e4p_c' : 1, 'actp_c' : 1, 'h2o_c' : 1}
-            add_reaction(model, rid, 'phosphoketolase', sprs, lower_bound, upper_bound)
+            name = 'phosphoketolase'
         elif rid == 'RED':
             sprs = {'nad_c' : -1, 'nadh_c' : 1}
-            add_reaction(model, rid, 'free_e', sprs, lower_bound, upper_bound)
-        elif rid == 'DXS':
-            sprs = {'3pg_c':-1, 'pyr_c':-1}
-            add_reaction(model, rid, 'deoxyribose synthase', sprs, lower_bound, upper_bound)
+            name = 'free_e'
         elif rid == 'MCS':
             add_metabolite(model, 'malcoa_c', 'C25H40N7O20P3S', 'Malyl-CoA')
             sprs = {'mal_L_c':-1, 'atp_c':-1, 'coa_c':-1, 'malcoa_c':1, 'adp_c':1, 'pi_c':1}
-            add_reaction(model, rid, 'malyl-CoA synthase', sprs, lower_bound, upper_bound)
+            name = 'malyl-CoA synthase'
+            reversible = True
         elif rid == 'MCL':
             add_metabolite(model, 'malcoa_c', 'C25H40N7O20P3S', 'Malyl-CoA')
             sprs = {'malcoa_c':-1, 'accoa_c':1, 'glx_c':1}
-            add_reaction(model, rid, 'malyl-CoA lyase', sprs, lower_bound, upper_bound)
+            name = 'malyl-CoA lyase'
         elif rid == 'SBP':
             add_metabolite(model, 'sbp_c', 'C7H16O13P2', 'D-sedoheptulose 1,7-bisphosphate')
             sprs = {'sbp_c':-1, 'h2o_c':-1, 's7p_c':1, 'pi_c':1}
-            add_reaction(model, rid, 'sedoheptulose bisphosphate phosphatase', sprs, lower_bound, upper_bound)
+            name = 'sedoheptulose bisphosphate phosphatase'
         elif rid == 'SBA':
             add_metabolite(model, 'sbp_c', 'C7H16O13P2', 'D-sedoheptulose 1,7-bisphosphate')
             sprs = {'sbp_c':-1, 'g3p_c':1, 'e4p_c':1}
-            add_reaction(model, rid, 'sedoheptulose bisphosphate aldolase', sprs, lower_bound, upper_bound)
+            name = 'sedoheptulose bisphosphate aldolase'
+            reversible = True
         else:
             raise Exception('unknown knockin reaction: ' + rid)
+
+        if lower_bound is None:
+            if reversible:
+                add_reaction(model, rid, name, sprs, -1000, upper_bound)
+            else:
+                add_reaction(model, rid, name, sprs, 0, upper_bound)
+        else:
+            add_reaction(model, rid, name, sprs, lower_bound, upper_bound)
             
 def add_metabolite_exchange(model, metabolite, lower_bound, upper_bound=0):
     try:

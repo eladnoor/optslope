@@ -13,7 +13,7 @@ from src.html_writer import HtmlWriter
 
 def main():
     #draw('wild_type', None, None)
-    draw('rubisco', dimension=2)
+    #draw('rubisco', dimension=2)
     draw('SBPase', dimension=2)
     draw('SBPase_with_rbc', dimension=2)
     #draw('deoxyribose')
@@ -61,7 +61,7 @@ def draw(title, dimension=2):
                 y = int(j*N_block + (k % N_block))
                 mat[x,y] = slope_data[i + j*N_ko, k]
                 
-    mat[np.where(np.isnan(mat))] = 0
+    mat[np.where(np.isnan(mat))] = -1
     plt.pcolor(mat, figure=fig)
     plt.colorbar()
     fig.savefig('res/heatmap_%dD_%s.svg' % (dimension, title))
