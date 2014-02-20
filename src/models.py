@@ -30,7 +30,7 @@ def init_wt_model(model_name, carbon_sources, BM_lower_bound=0.1):
         model = create_cobra_model_from_sbml_file('data/%s.xml' % model_name)
         
     for key, val in carbon_sources.iteritems():
-        rxns['EX_' + key + '_e'].lower_bound = val
+        set_exchange_bounds(model, key, val, upper_bound=0)
         
     # set BM lower bound
     for r in model.reactions:

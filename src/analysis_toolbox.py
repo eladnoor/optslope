@@ -68,7 +68,7 @@ def display_metabolite_reacitons(model, m, reaction2flux_dict, html):
     
     # fluxes
     rowdicts = []
-    for r in m.get_reaction():
+    for r in m.reactions:
         if abs(reaction2flux_dict[r]) < 1e-10:
             continue
             

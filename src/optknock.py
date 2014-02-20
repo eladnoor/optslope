@@ -1,4 +1,3 @@
-import sys
 import numpy as np
 from copy import deepcopy
 from pulp import LpProblem, LpMaximize, LpMinimize, LpVariable, LpAffineExpression,\

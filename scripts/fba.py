@@ -4,7 +4,7 @@ from copy import deepcopy
 import matplotlib.pyplot as plt
 
 from src.analysis_toolbox import plot_multi_PPP
-from src.models import init_wt_model, knockout_reactions, knockin_reactions
+from src import models
 from src.optknock import OptKnock
 from src.html_writer import HtmlWriter
 
@@ -29,9 +29,14 @@ def main():
     #######################################
     #model = init_wt_model('iJO1366', {'ac' : -10}); ko_reactions = 'PGM,TRSARr,HPYRRx,HPYRRy'; ki_reactions = 'RED';
     #model = init_wt_model('iJO1366', {'rib_D' : -10}); ko_reactions = 'TKT1'; ki_reactions = 'RBC,PRK'; PPP_reaction = 'RBC';
-    model = init_wt_model('iJO1366', {'xyl_D' : -10}); ko_reactions = 'RPI'; ki_reactions = 'RBC,PRK'; PPP_reaction = 'RBC';
+    #model = init_wt_model('iJO1366', {'xyl_D' : -10}); ko_reactions = 'RPI'; ki_reactions = 'RBC,PRK'; PPP_reaction = 'RBC';
     #model = init_wt_model('iJO1366', {'xyl_D' : -10}); ko_reactions = 'G6PDH2r,PFK,F6PA,FRUK,PFK_3,DRPA'; ki_reactions = 'RBC,PRK';
     #model = init_wt_model('iJO1366', {'fru' : -10, 'rib_D' : -10}); ko_reactions = 'G6PDH2r,PFK,F6PA,FRUK,PFK_3,DRPA,TKT1,TKT2'; ki_reactions = 'PKT';
+
+    #######################################
+    # SBPase optimization without Rubisco #
+    #######################################
+    model = models.init_wt_model('ecoli_core', {'xu5p_D' : -10}); ko_reactions = 'FBP,G6PDH2r'; ki_reactions = 'SBP,SBA'; PPP_reaction = 'SBP';
     
     ###############################
     # Shikimate generating strain #
@@ -47,26 +52,26 @@ def main():
     #ko_reactions = "POR5,MCITL2";
     #ko_reactions = "POR5,FTHFLi,GART,RPI"; 
     
-    models = {'WT' : model}
+    model_dict = {'WT' : model}
 
     if ko_reactions:
-        for k in models.keys():
-            m = deepcopy(models[k])
-            knockout_reactions(m, ko_reactions)
-            models[k + ' -%s' % ko_reactions] = m
+        for k in model_dict.keys():
+            m = models.clone_model(model_dict[k])
+            models.knockout_reactions(m, ko_reactions)
+            model_dict[k + ' -%s' % ko_reactions] = m
 
     if ki_reactions:
-        for k in models.keys():
-            m = deepcopy(models[k])
-            knockin_reactions(m, ki_reactions)
-            models[k + ' +%s' % ki_reactions] = m
+        for k in model_dict.keys():
+            m = models.clone_model(model_dict[k])
+            models.knockin_reactions(m, ki_reactions)
+            model_dict[k + ' +%s' % ki_reactions] = m
 
     # Run the optimization for the objective reaction and medium composition
     # set in the file.
     main_html.write('<table border="1">\n')
     main_html.write('<tr><td><b>Model Name</b></td><td><b>Growth Yield</b></td></tr>\n')
     growths = {}
-    for name, model in sorted(models.iteritems()):
+    for name, model in sorted(model_dict.iteritems()):
         print "solving %50s model" % name,
         ok = OptKnock(model)
         ok.prepare_FBA_primal()
@@ -89,8 +94,9 @@ def main():
     if PPP_reaction:
         print 'Calculating Phenotypic Phase Plane for phosphoketolase ...'
         fig, ax = plt.subplots(1, figsize=(6,6))
-        plot_multi_PPP(models, PPP_reaction, ax)
+        plot_multi_PPP(model_dict, PPP_reaction, ax)
         ax.set_title('Phenotypic Phase Plane')
+        #ax.set_ylim(0, 10)
         main_html.embed_matplotlib_figure(fig, width=400, height=400)
 
 if __name__ == "__main__":

@@ -27,7 +27,7 @@ class DrawFlux(object):
 
     def __init__(self, svg_fname):
         # parse the input SVG
-        self.svg        = pysvg.parser.parse(svg_fname)
+        self.svg = pysvg.parser.parse(svg_fname)
         
         main_group = self.svg.getAllElements()[-2] # the main G structure is one before last
         defs_elem  = main_group.getElementsByType(pysvg.structure.Defs)[0]
