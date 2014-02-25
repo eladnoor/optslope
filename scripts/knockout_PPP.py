@@ -19,6 +19,13 @@ def main():
     #         carbon_sources=['g6p', 'ac', 'succ'],
     #         knockouts=['CS', 'PYK'])
 
+    draw_PPP('sedoheptulose_bypass',
+             target_reaction='RBC',
+             knockins=['RBC,PRK', 'RBC,PRK,SBP,SBA'],
+             carbon_sources=['xu5p_D', 'dhap', 'electrons'],
+             knockouts=['G6PDH2r,PFK', 'G6PDH2r,PFK,TALA', 'G6PDH2r,TALA'],
+             rbc_upper_bound=100)
+    
     draw_PPP('rubisco_double',
              target_reaction='RBC',
              knockins=['RBC,PRK'],
@@ -39,13 +46,12 @@ def main():
              carbon_sources=['xu5p_D,ac', 'dhap,ac', 'ac'],
              knockouts=['ICL,MALS,PFK,G6PDH2r', 'ICL,MALS,RPI,G6PDH2r'],
              rbc_upper_bound=100)
-
+             
 def draw_PPP(title, target_reaction, knockins, carbon_sources, knockouts,
              rbc_upper_bound=100):
     for ki in knockins:
         wt_model = models.init_wt_model('ecoli_core', {}, BM_lower_bound=0.1)
-        models.knockin_reactions(wt_model, ki, 0, 1000)
-        models.knockin_reactions(wt_model, 'EDD,EDA', 0, 1000)
+        models.knockin_reactions(wt_model, ki)
         models.knockin_reactions(wt_model, 'EX_xu5p_D,EX_r5p,EX_dhap,EX_2pg,EX_e4p,EX_6pgc', 0, 0)
 
         carbon_uptake_rate = 50
@@ -113,7 +119,7 @@ def draw_PPP(title, target_reaction, knockins, carbon_sources, knockouts,
                 ax.text(0.5, 0.5*rbc_upper_bound, ko_text, color=ko_color, fontsize=15, ha='center')
         
         fig.tight_layout()
-        fig.savefig('res/PPP_%s.svg' % title)
+        fig.savefig('res/PPP_%s_%s.svg' % (ki, title))
 
 if __name__ == "__main__":
     main()
